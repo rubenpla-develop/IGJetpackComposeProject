@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.rubenpla.igjetpackcomposeproject.ui.theme.IGJetpackComposeProjectTheme
 
@@ -37,7 +38,11 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     )
 }
 
-@Preview(showBackground = true)
+@Preview(name = "PREVIEW 1",
+    showBackground = true,
+    showSystemUi = true,
+    apiLevel = 33,
+    device = Devices.PIXEL_3A_XL)
 @Composable
 fun GreetingPreview() {
     IGJetpackComposeProjectTheme {
