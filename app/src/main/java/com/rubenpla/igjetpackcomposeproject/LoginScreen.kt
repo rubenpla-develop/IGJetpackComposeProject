@@ -26,10 +26,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -45,16 +45,17 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.rubenpla.igjetpackcomposeproject.login.LoginViewModel
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(loginViewModel: LoginViewModel) {
     Box(
         Modifier
             .fillMaxSize()
             .padding(8.dp)
     ) {
         Header(Modifier.align(Alignment.TopEnd))
-        Body(modifier = Modifier.align(Alignment.Center))
+        Body(modifier = Modifier.align(Alignment.Center), loginViewModel)
         Footer(modifier = Modifier.align(Alignment.BottomCenter))
     }
 
@@ -72,18 +73,21 @@ fun Header(modifier: Modifier) {
 }
 
 @Composable
-fun Body(modifier: Modifier) {
-    var email by rememberSaveable {
+fun Body(modifier: Modifier, loginViewModel: LoginViewModel) {
+    val email by loginViewModel.email.observeAsState(initial = "")
+    /*var email by rememberSaveable {
         mutableStateOf("")
     }
-
-    var password by rememberSaveable {
+*/
+    val password by loginViewModel.password.observeAsState(initial = "")
+/*    var password by rememberSaveable {
         mutableStateOf("")
-    }
+    }*/
 
-    var isLoginEnabled by rememberSaveable {
+    val isLoginEnabled : Boolean by loginViewModel.isLoginEnabled.observeAsState(initial = false)
+/*    var isLoginEnabled by rememberSaveable {
         mutableStateOf(false)
-    }
+    }*/
 
     Column(modifier = modifier) {
         ImageLogo(Modifier.align(Alignment.CenterHorizontally))
@@ -92,13 +96,17 @@ fun Body(modifier: Modifier) {
                 .size(16.dp)
                 .fillMaxWidth()
         )
-        EmailTextField(email) { currentText -> email = currentText }
+        EmailTextField(email) { currentText -> loginViewModel.onLoginChanged(
+            email = currentText,
+            password = password) }
         Spacer(
             modifier = Modifier
                 .size(8.dp)
                 .fillMaxWidth()
         )
-        PasswordTextField(password) { currentText -> password = currentText }
+        PasswordTextField(password) { currentText -> loginViewModel.onLoginChanged(
+            email = email,
+            password = currentText) }
         Spacer(
             modifier = Modifier
                 .size(8.dp)
